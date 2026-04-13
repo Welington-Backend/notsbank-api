@@ -1,4 +1,4 @@
-# 🏦 NotsBank API
+# 🏦 Sistema Bancário API (NotsBank)
 
 API bancária desenvolvida com Java e Spring Boot, simulando operações reais de contas bancárias com foco em boas práticas de backend.
 
