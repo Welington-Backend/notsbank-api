@@ -2,16 +2,19 @@ package notsbank.controller;
 
 import jakarta.validation.Valid;
 import notsbank.dto.ApiResponse;
+import notsbank.dto.request.CriarContaRequest;
 import notsbank.dto.request.OperacaoRequest;
 import notsbank.dto.request.SaqueRequest;
 import notsbank.dto.request.TransferenciaRequest;
 import notsbank.dto.response.ContaResponse;
 import notsbank.dto.response.ExtratoResponse;
 import notsbank.dto.response.TransferenciaResponse;
-import notsbank.model.Conta;
 import notsbank.service.ContaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import notsbank.dto.request.LoginRequest;
+import notsbank.dto.request.CriarContaRequest;
+import notsbank.dto.request.AlterarSenhaRequest;
 
 import java.util.List;
 
@@ -54,8 +57,8 @@ public class ContaController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ContaResponse>> criar(@Valid @RequestBody Conta conta) {
-        ContaResponse contaCriada = contaService.criar(conta);
+    public ResponseEntity<ApiResponse<ContaResponse>> criar(@Valid @RequestBody CriarContaRequest request) {
+        ContaResponse contaCriada = contaService.criar(request);
 
         ApiResponse<ContaResponse> resposta = new ApiResponse<>(
                 201,
@@ -131,6 +134,41 @@ public class ContaController {
                 200,
                 true,
                 extrato,
+                null
+        );
+
+        return ResponseEntity.ok(resposta);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest request) {
+        String mensagem = contaService.login(request.getNumero(), request.getSenha());
+
+        ApiResponse<String> resposta = new ApiResponse<>(
+                200,
+                true,
+                mensagem,
+                null
+        );
+
+        return ResponseEntity.ok(resposta);
+    }
+
+    @PostMapping("/{numero}/alterar-senha")
+    public ResponseEntity<ApiResponse<String>> alterarSenha(
+            @PathVariable Integer numero,
+            @Valid @RequestBody AlterarSenhaRequest request) {
+
+        String mensagem = contaService.alterarSenha(
+                numero,
+                request.getSenhaAtual(),
+                request.getNovaSenha()
+        );
+
+        ApiResponse<String> resposta = new ApiResponse<>(
+                200,
+                true,
+                mensagem,
                 null
         );
 

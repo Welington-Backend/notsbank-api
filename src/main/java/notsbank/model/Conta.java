@@ -3,6 +3,7 @@ package notsbank.model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "contas")
@@ -14,11 +15,21 @@ public class Conta {
 
     private String titular;
     private Double saldo;
+    @JsonIgnore
+    private String senha;
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Extrato> extratos = new ArrayList<>();
 
     public Conta() {
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public Conta(Integer numero, String titular, Double saldo) {

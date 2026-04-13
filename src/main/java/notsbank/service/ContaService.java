@@ -13,19 +13,24 @@ import notsbank.repository.ContaRepository;
 import notsbank.repository.ExtratoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import notsbank.dto.request.CriarContaRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class ContaService {
 
     private final ContaRepository contaRepository;
     private final ExtratoRepository extratoRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ContaService(ContaRepository contaRepository, ExtratoRepository extratoRepository) {
+    public ContaService(ContaRepository contaRepository,
+                        ExtratoRepository extratoRepository,
+                        PasswordEncoder passwordEncoder) {
         this.contaRepository = contaRepository;
         this.extratoRepository = extratoRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<ContaResponse> listarTodas() {
@@ -42,9 +47,28 @@ public class ContaService {
         return toResponse(conta);
     }
 
-    public ContaResponse criar(Conta conta) {
+    public ContaResponse criar(CriarContaRequest request) {
+
+        Conta conta = new Conta();
+        conta.setTitular(request.getTitular());
+        conta.setSaldo(request.getSaldo());
+        conta.setSenha(passwordEncoder.encode(request.getSenha()));
+
         Conta contaSalva = contaRepository.save(conta);
+
         return toResponse(contaSalva);
+    }
+
+    public String login(Integer numero, String senha) {
+
+        Conta conta = contaRepository.findById(numero)
+                .orElseThrow(() -> new ContaNaoEncontradaException("Conta não encontrada."));
+
+        if (!passwordEncoder.matches(senha, conta.getSenha())) {
+            throw new ValorInvalidoException("Senha incorreta.");
+        }
+
+        return "Login realizado com sucesso.";
     }
 
     private ContaResponse toResponse(Conta conta) {
@@ -184,5 +208,20 @@ public class ContaService {
                 .stream()
                 .map(this::toExtratoResponse)
                 .toList();
+    }
+
+    public String alterarSenha(Integer numero, String senhaAtual, String novaSenha) {
+
+        Conta conta = contaRepository.findById(numero)
+                .orElseThrow(() -> new ContaNaoEncontradaException("Conta não encontrada."));
+
+        if (!passwordEncoder.matches(senhaAtual, conta.getSenha())) {
+            throw new ValorInvalidoException("Senha atual incorreta.");
+        }
+
+        conta.setSenha(passwordEncoder.encode(novaSenha));
+        contaRepository.save(conta);
+
+        return "Senha alterada com sucesso.";
     }
 }
