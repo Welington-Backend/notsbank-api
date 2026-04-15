@@ -210,6 +210,22 @@ public class ContaService {
                 .toList();
     }
 
+    public Double obterSaldo(Integer numero) {
+        Conta conta = contaRepository.findById(numero)
+                .orElseThrow(() -> new ContaNaoEncontradaException("Conta não encontrada"));
+
+        return conta.getSaldo();
+    }
+
+    public void validarLogin(Integer numero, String senha) {
+        Conta conta = contaRepository.findById(numero)
+                .orElseThrow(() -> new ContaNaoEncontradaException("Conta não encontrada"));
+
+        if (!passwordEncoder.matches(senha, conta.getSenha())) {
+            throw new ValorInvalidoException("Senha inválida.");
+        }
+    }
+
     public String alterarSenha(Integer numero, String senhaAtual, String novaSenha) {
 
         Conta conta = contaRepository.findById(numero)
