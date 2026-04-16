@@ -1,64 +1,52 @@
-# 🏦 Sistema Bancário API (NotsBank)
+# NotsBank API
 
-API bancária desenvolvida com Java e Spring Boot, simulando operações reais de contas bancárias com foco em boas práticas de backend.
+API bancária desenvolvida com Spring Boot para gerenciamento de contas e transações financeiras.
 
----
+## 🚀 Tecnologias
+
+* Java 21
+* Spring Boot
+* Spring Security (JWT)
+* Spring Data JPA
+* H2 / MySQL
+* Swagger (OpenAPI)
+
+## 🔐 Autenticação
+
+A API utiliza autenticação via JWT.
+
+Para acessar endpoints protegidos:
+
+1. Realizar login em `/auth/login`
+2. Copiar o token retornado
+3. Inserir no Swagger no botão **Authorize**
+
+Formato:
+Bearer SEU_TOKEN
 
 ## 📌 Funcionalidades
 
-- Criação de contas
-- Depósito
-- Saque
-- Transferência entre contas
-- Consulta de extrato
-- Login com autenticação
-- Alteração de senha
+* Criar conta
+* Listar contas
+* Consultar saldo
+* Realizar depósito
+* Realizar saque
+* Transferência entre contas
+* Extrato de transações
 
----
+## 📖 Documentação
 
-## 🔐 Segurança
+Acesse via Swagger:
+http://localhost:8080/swagger-ui/index.html
 
-- Senhas criptografadas com BCrypt
-- Senha não exposta nas respostas da API
-- Validação de login
-- Alteração de senha com confirmação da senha atual
+## ▶️ Como rodar o projeto
 
----
+```bash
+git clone https://github.com/SEU-USUARIO/notsbank.git
+cd notsbank
+mvn spring-boot:run
+```
 
-## 🛠 Tecnologias utilizadas
+## 👨‍💻 Autor
 
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- Banco de dados (H2 / MySQL)
-- BCrypt (Spring Security Crypto)
-
----
-
-## 📡 Endpoints principais
-
-POST /contas
-POST /contas/login
-POST /contas/{numero}/deposito
-POST /contas/{numero}/saque
-POST /contas/{numeroOrigem}/transferencia
-GET /contas/{numero}/extrato
-POST /contas/{numero}/alterar-senha
-
-
----
-
-## 📈 Objetivo do projeto
-
-Projeto desenvolvido com o objetivo de praticar conceitos de backend com Java, incluindo:
-
-- Arquitetura em camadas
-- Uso de DTOs
-- Tratamento de exceções
-- Segurança básica com criptografia de senha
-
----
-
-## 🚀 Autor
-
-Desenvolvido por Weligton Backend
+Desenvolvido por Welington
